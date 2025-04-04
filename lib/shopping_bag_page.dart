@@ -82,7 +82,7 @@ class ShoppingBag extends StatelessWidget {
                       : ListView.builder(
                           itemCount: foods.length,
                           itemBuilder: (context, idx) {
-                            return shoppingList();
+                            return shoppingList(foods[idx]!);
                           })),
               SizedBox(
                   width: double.infinity,
@@ -113,7 +113,7 @@ class ShoppingBag extends StatelessWidget {
     ;
   }
 
-  Card shoppingList() {
+  Card shoppingList(Map<String, dynamic> foods) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       elevation: 3,
@@ -122,49 +122,178 @@ class ShoppingBag extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                'assets/pizza.jpg',
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
+        child: SizedBox(
+          height: 150,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: AspectRatio(
+                  aspectRatio: 1 / 1,
+                  child: Image.asset(
+                    foods['image'],
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '피자',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                foods['name'],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  print('-1');
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                        width: 1, color: Colors.black),
+                                  ),
+                                  child: Icon(Icons.exposure_minus_1),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              Container(
+                                width: 45,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  border:
+                                      Border.all(width: 1, color: Colors.black),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '0',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  print('+1');
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                        width: 1, color: Colors.black),
+                                  ),
+                                  child: Icon(Icons.plus_one),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '설명설명',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '₩ ${NumberFormat('#,###').format(int.parse('16000'))}', // 세 자리마다 콤마 추가
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.deepOrange,
-                    ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              print('이거 삭제혀');
+                            },
+                            child: Icon(Icons.cancel),
+                          ),
+                          Spacer(),
+                          Text(
+                              '₩ ${NumberFormat('#,###').format(int.parse(foods['price']))}', // 세 자리마다 콤마 추가
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                              style: const TextStyle(
+                                letterSpacing: -1,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepOrange,
+                              )),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+// GestureDetector(
+//                                 onTap: () {
+//                                   print('이거 삭제혀');
+//                                 },
+//                                 child: Icon(Icons.cancel),
+//                               )
+
+
+
+
+
+
+
+// Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Expanded(
+//                           child: SizedBox(
+//                             width: double.infinity,
+//                             child: Text(
+//                               foods['name'],
+//                               style: const TextStyle(
+//                                 fontSize: 18,
+//                                 fontWeight: FontWeight.bold,
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                         const SizedBox(height: 8),
+//                         Expanded(
+//                           child: Text(
+//                             '₩ ${NumberFormat('#,###').format(int.parse(foods['price']))}', // 세 자리마다 콤마 추가
+//                             style: const TextStyle(
+//                               fontSize: 16,
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.deepOrange,
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
