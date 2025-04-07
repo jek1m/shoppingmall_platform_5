@@ -35,39 +35,38 @@ class _AddFoodPageState extends State<AddFoodPage> {
                 // TODO: 이미지 선택 기능 구현 예정
               },
               child: // 이미지 선택 컨테이너
-                // 이미지 선택 컨테이너
-GestureDetector(
-  onTap: () {
-    // SnackBar로 메시지 띄우기
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('이미지를 선택했습니다'),
-        duration: Duration(seconds: 2), // 2초간 표시
-      ),
-    );
-  },
-  child: Container(
-    height: 180, // 크기 설정
-    width: double.infinity,
-    padding: const EdgeInsets.all(16.0),
-    decoration: BoxDecoration(
-      color: Colors.grey[300], // 회색 배경
-      borderRadius: BorderRadius.circular(8), // 모서리 둥글게
-    ),
-    child: const Center(
-      child: Text(
-        '이미지 선택',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.black54,
-        ),
-      ),
-    ),
-  ),
-),
-
+                  // 이미지 선택 컨테이너
+                  GestureDetector(
+                onTap: () {
+                  // SnackBar로 메시지 띄우기
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('이미지를 선택했습니다'),
+                      duration: Duration(seconds: 2), // 2초간 표시
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 180, // 크기 설정
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300], // 회색 배경
+                    borderRadius: BorderRadius.circular(8), // 모서리 둥글게
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '이미지 선택',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 16), // 이미지 선택 컨테이너와 상품 이름 사이 간격
 
@@ -159,6 +158,18 @@ GestureDetector(
               width: double.infinity, // 버튼을 화면 너비만큼 채우기
               child: ElevatedButton(
                 onPressed: () {
+                  //현재 값이 없어도 버튼이 눌림.
+                  //입력 필수 값 검사: 텍스트가 하나라도 비어있으면 스낵바를 활용해 텍스트 출력함.
+                  if (titleController.text.isEmpty ||
+                      descController.text.isEmpty ||
+                      priceController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('모든 항목을 입력해주세요'),
+                      ),
+                    );
+                    return;
+                  }
                   final result = {
                     'name': titleController.text,
                     'description': descController.text,
@@ -166,7 +177,7 @@ GestureDetector(
                     'price': priceController.text
                   };
 
-                  Navigator.pop(context, result);
+                  Navigator.pop(context, result); //데이터 전달
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16), // 버튼 높이 설정
