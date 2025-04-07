@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FoodDetailPage extends StatefulWidget {
   final Map<String, String> food;
   final List<Map<String, dynamic>?> foods;
-  final void Function(Map<String, String> food) onAddToCart;
 
-  const FoodDetailPage(
-      {Key? key,
-      required this.food,
-      required this.foods,
-      required this.onAddToCart})
+  const FoodDetailPage({Key? key, required this.food, required this.foods})
       : super(key: key);
 
   @override
@@ -70,7 +66,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                   widget.food['amount'] = sum.toString();
                 } else {
                   widget.food['amount'] = _quantity.toString();
-                  widget.onAddToCart(widget.food);
+                  widget.foods.add(widget.food);
                 }
               },
             ),
@@ -92,7 +88,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                 child: Image.asset(widget.food['image']!, fit: BoxFit.cover)),
             SizedBox(height: 30),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Text("상품 가격 : ${(widget.food['price']!)}원",
+              Text(
+                  "상품 가격 : ${NumberFormat('#,###').format(int.parse(widget.food['price']!))}원",
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               SizedBox(width: 8)
             ]),
@@ -147,7 +144,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                       Text('총 가격',
                           style: TextStyle(fontSize: 14, color: Colors.black)),
                       Text(
-                        '${(totalPrice)}원',
+                        '${NumberFormat('#,###').format(totalPrice)}원',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
