@@ -87,8 +87,8 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       isDense: true, // 세로 padding 줄이기
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 12), //세로 사이즈 수정
                     ),
                   ),
                 ),
@@ -103,6 +103,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                   '상품 가격: ',
                   style: TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold, //
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -112,8 +113,8 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       isDense: true,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 12), //세로 사이즈 수정
                     ),
                     keyboardType: TextInputType.number, // 숫자 키보드
                   ),
@@ -121,22 +122,28 @@ class _AddFoodPageState extends State<AddFoodPage> {
                 const SizedBox(width: 10),
                 const Text(
                   '원', // "원" 텍스트 추가
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 20), //간격 수정
 
             // 상품 설명
             const Text(
               '상품 설명: ',
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold, //텍스트 볼드체로 통일
+              ),
             ),
             const SizedBox(height: 6),
 
             // 상품 설명 입력 필드 (크기 축소)
             SizedBox(
-              height: 120, // 높이 축소
+              height: 150, // 높이 수정.
               child: TextField(
                 controller: descController,
                 maxLines: null, // 여러 줄 입력 가능
@@ -158,6 +165,8 @@ class _AddFoodPageState extends State<AddFoodPage> {
               width: double.infinity, // 버튼을 화면 너비만큼 채우기
               child: ElevatedButton(
                 onPressed: () {
+                  final priceText = priceController.text;
+
                   //현재 값이 없어도 버튼이 눌림.
                   //입력 필수 값 검사: 텍스트가 하나라도 비어있으면 스낵바를 활용해 텍스트 출력함.
                   if (titleController.text.isEmpty ||
@@ -167,6 +176,13 @@ class _AddFoodPageState extends State<AddFoodPage> {
                       const SnackBar(
                         content: Text('모든 항목을 입력해주세요'),
                       ),
+                    );
+                    return;
+                  }
+                  //숫자 검사: 스낵바 사용으로 숫자만 입력하도록 함.
+                  if (int.tryParse(priceText) == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('가격은 숫자만 입력해주세요')),
                     );
                     return;
                   }
