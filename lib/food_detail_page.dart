@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 
 class FoodDetailPage extends StatefulWidget {
   final Map<String, String> food;
+  final List<Map<String, dynamic>?> foods;
+  final void Function(Map<String, String> food) onAddToCart;
 
-  const FoodDetailPage({Key? key, required this.food}) : super(key: key);
+  const FoodDetailPage(
+      {Key? key,
+      required this.food,
+      required this.foods,
+      required this.onAddToCart})
+      : super(key: key);
 
   @override
   State<FoodDetailPage> createState() => _FoodDetailPageState();
@@ -20,8 +27,11 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: Text('구매 확인'),
-          content: Text('${widget.food['name']}을 $_quantity개 구매하시겠습니까?'),
+          title: Text(''),
+          content: Text(
+            '장바구니에 ${widget.food['name']}을/를 $_quantity개 담으시겠습니까?',
+            style: TextStyle(fontSize: 18),
+          ),
           actions: [
             TextButton(
               child: Text('취소'),
@@ -45,12 +55,24 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: Text('구매 완료'),
-          content: Text('감사합니다. 구매가 완료되었습니다.'),
+          title: Text(''),
+          content: Text('장바구니에 담았습니다.', style: TextStyle(fontSize: 18)),
           actions: [
             TextButton(
               child: Text('확인'),
-              onPressed: () => Navigator.of(ctx).pop(),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+
+                // 같은 음식을 또 담을 경우 찾아서 증가
+                if (widget.foods.contains(widget.food)) {
+                  int prevAmount = int.parse(widget.food['amount']!);
+                  int sum = prevAmount + _quantity;
+                  widget.food['amount'] = sum.toString();
+                } else {
+                  widget.food['amount'] = _quantity.toString();
+                  widget.onAddToCart(widget.food);
+                }
+              },
             ),
           ],
         );

@@ -3,51 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ShoppingBag extends StatefulWidget {
+  List<Map<String, dynamic>?> foods;
+
+  ShoppingBag(this.foods);
+
   @override
   State<ShoppingBag> createState() => _ShoppingBagState();
 }
 
 class _ShoppingBagState extends State<ShoppingBag> {
-  List<Map<String, dynamic>?> foods = [
-    {
-      'name': '피자1',
-      'description': '치즈크러스트 기본 탑재 피자예요',
-      'image': 'assets/pizza.jpg',
-      'price': '12000',
-      'amount': '2'
-    },
-    {
-      'name': '피자2',
-      'description': '치즈크러스트 기본 탑재 피자예요',
-      'image': 'assets/pizza.jpg',
-      'price': '12000',
-      'amount': '1'
-    },
-    {
-      'name': '피자3',
-      'description': '치즈크러스트 기본 탑재 피자예요',
-      'image': 'assets/pizza.jpg',
-      'price': '12000',
-      'amount': '3'
-    },
-    {
-      'name': '피자4',
-      'description': '치즈크러스트 기본 탑재 피자예요',
-      'image': 'assets/pizza.jpg',
-      'price': '12000',
-      'amount': '4'
-    },
-    {
-      'name': '피자5',
-      'description': '치즈크러스트 기본 탑재 피자예요',
-      'image': 'assets/pizza.jpg',
-      'price': '12000',
-      'amount': '5'
-    },
-  ];
+  int total = 0;
 
   /// 총 금액을 나타내는 함수
-  int total = 0;
   int getTotalMoney(List<Map<String, dynamic>?> foods) {
     total = 0;
 
@@ -62,9 +29,10 @@ class _ShoppingBagState extends State<ShoppingBag> {
     return total;
   }
 
+  /// 장바구니에서 삭제
   void onRemove(Map<String, dynamic> food) {
     setState(() {
-      foods.removeWhere((item) => item == food);
+      widget.foods.removeWhere((item) => item == food);
     });
   }
 
@@ -72,7 +40,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
   void onChange({required Map<String, dynamic> food, required String type}) {
     int currentAmount = int.parse(food['amount']);
     setState(() {
-      print('setState 시작');
       if (type == 'add') {
         food['amount'] = (currentAmount + 1).toString();
       } else if (type == 'subtract') {
@@ -83,7 +50,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
 
   @override
   Widget build(BuildContext context) {
-    print('build-----');
     return Scaffold(
       appBar: AppBar(
         title: Text('맛있으면 또 5조'),
@@ -96,7 +62,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: foods.isEmpty
+                child: widget.foods.isEmpty
                     ? const Center(
                         child: Text(
                           '장바구니가 비어있습니다.',
@@ -105,9 +71,9 @@ class _ShoppingBagState extends State<ShoppingBag> {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: foods.length,
+                        itemCount: widget.foods.length,
                         itemBuilder: (context, idx) {
-                          return shoppingList(foods[idx]!);
+                          return shoppingList(widget.foods[idx]!);
                         }),
               )),
               Container(
@@ -131,7 +97,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                   children: [
                     Expanded(
                       child: Text(
-                        '₩ ${NumberFormat('#,###').format(getTotalMoney(foods))}', // 세 자리마다 콤마 추가
+                        '₩ ${NumberFormat('#,###').format(getTotalMoney(widget.foods))}', // 세 자리마다 콤마 추가
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
@@ -172,7 +138,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                         CupertinoDialogAction(
                                           isDestructiveAction: true,
                                           onPressed: () {
-                                            // 이게 있어야 팝업 창이 사라짐
+                                            // 일단 메인 화면으로 돌아가기
+                                            Navigator.pop(context);
                                             Navigator.pop(context);
                                           },
                                           child: Text(
@@ -278,11 +245,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  print('-1: $food');
-
                                   if (food['amount'] == '0') return;
                                   onChange(food: food, type: 'subtract');
-                                  print('-1: onChange 후: $food');
                                 },
                                 child: Container(
                                   width: 40,
@@ -319,7 +283,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  print('+1: $food');
                                   onChange(food: food, type: 'add');
                                 },
                                 child: Container(
@@ -345,7 +308,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              print('이거 삭제혀');
                               showCupertinoDialog(
                                 context: context,
                                 builder: (context) {

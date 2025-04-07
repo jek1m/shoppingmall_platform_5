@@ -28,6 +28,16 @@ class _FoodListPageState extends State<FoodListPage> {
     },
   ];
 
+  // 현진, 장바구니 페이지를 위해 만든 변수
+  List<Map<String, dynamic>?> cartList = [];
+
+  // 현진, 장바구니 페이지를 위해 만든 상태 업데이트 함수
+  void onAddToCart(food) {
+    setState(() {
+      cartList.add(food);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,11 +51,11 @@ class _FoodListPageState extends State<FoodListPage> {
                 onTap: () {
                   print('장바구니');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ShoppingBag();
+                    return ShoppingBag(cartList);
                   }));
                 },
                 child: Icon(
-                  Icons.shopping_cart,
+                  Icons.add_shopping_cart,
                   size: 34,
                   color: Color.fromRGBO(38, 22, 73, 1),
                 )),
@@ -73,7 +83,10 @@ class _FoodListPageState extends State<FoodListPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FoodDetailPage(food: food),
+                              builder: (context) => FoodDetailPage(
+                                  food: food,
+                                  foods: cartList,
+                                  onAddToCart: onAddToCart),
                             ),
                           );
                         },
