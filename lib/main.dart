@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'food_list_page.dart';
 
-void main() {
+void main() { 
   runApp(const MyApp());
 }
 
