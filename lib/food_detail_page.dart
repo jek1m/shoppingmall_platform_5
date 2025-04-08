@@ -105,7 +105,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                       fontSize: 18,
                     ))),
             SizedBox(height: 20),
-            Spacer(),
+            // Spacer(),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               color: Colors.grey[300],
