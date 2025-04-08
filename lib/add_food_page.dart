@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class AddFoodPage extends StatefulWidget {
   @override
@@ -10,8 +12,24 @@ class _AddFoodPageState extends State<AddFoodPage> {
   TextEditingController descController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
+  File? selectedImage; //이미지 파일형태로 가져오기
+
   // 이미지 선택 여부를 확인하기 위한 변수
-  bool isImageSelected = false;
+  //bool isImageSelected = false;
+
+  //갤러리에서 이미지 선택
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = //선택하는 동안 기다리는 비동기 처리
+        await picker.pickImage(source: ImageSource.gallery); //갤러리 호출 후 저장
+
+    if (pickedFile != null) {
+      setState(() {
+        //UI갱신
+        selectedImage = File(pickedFile.path); //호출된 이미지 가져오기
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,48 +44,35 @@ class _AddFoodPageState extends State<AddFoodPage> {
           children: [
             // 이미지 선택 컨테이너
             GestureDetector(
-              onTap: () {
-                // 탭 했을 때 텍스트 변경
-                setState(() {
-                  isImageSelected = true;
-                });
+              onTap: pickImage, //탭하면 갤러리열리는 함수 가져옴.
 
-                // TODO: 이미지 선택 기능 구현 예정
-              },
-              child: // 이미지 선택 컨테이너
-                  // 이미지 선택 컨테이너
-                  GestureDetector(
-                onTap: () {
-                  // SnackBar로 메시지 띄우기
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('이미지를 선택했습니다'),
-                      duration: Duration(seconds: 2), // 2초간 표시
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 180, // 크기 설정
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300], // 회색 배경
-                    borderRadius: BorderRadius.circular(8), // 모서리 둥글게
-                  ),
-                  child: const Center(
-                    child: Text(
-                      '이미지 선택',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
+              child: Container(
+                height: 180, // 크기 설정
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300], // 회색 배경
+                  borderRadius: BorderRadius.circular(8), // 모서리 둥글게
                 ),
+
+                child: selectedImage != null
+                    ? Image.file(
+                        //선택한 이미지 보여주기
+                        selectedImage!,
+                        fit: BoxFit.cover,
+                      )
+                    : const Center(
+                        //없으면 '이미지 선택' 텍스트 출력.
+                        child: Text('이미지 선택',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54,
+                            )),
+                      ),
               ),
             ),
+
             const SizedBox(height: 16), // 이미지 선택 컨테이너와 상품 이름 사이 간격
 
             // 상품 이름
@@ -85,6 +90,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                   child: TextField(
                     controller: titleController,
                     decoration: const InputDecoration(
+                      hintText: '이름을 입력해주세요', //hinttext추가
                       border: OutlineInputBorder(),
                       isDense: true, // 세로 padding 줄이기
                       contentPadding: EdgeInsets.symmetric(
@@ -111,6 +117,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                   child: TextField(
                     controller: priceController,
                     decoration: const InputDecoration(
+                      hintText: '가격을 입력해주세요',
                       border: OutlineInputBorder(),
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(
@@ -149,6 +156,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                 maxLines: null, // 여러 줄 입력 가능
                 expands: true, // 남은 공간을 모두 차지하도록 설정 (높이와 함께 사용)
                 decoration: const InputDecoration(
+                  hintText: '내용을 입력해주세요',
                   border: OutlineInputBorder(),
                   isDense: true,
                   contentPadding:
@@ -189,7 +197,8 @@ class _AddFoodPageState extends State<AddFoodPage> {
                   final result = {
                     'name': titleController.text,
                     'description': descController.text,
-                    'image': 'assets/ricesoup.png',
+                    'image': selectedImage?.path ??
+                        'assets/no_image.png', // 선택 안 했을 경우 기본 이미지
                     'price': priceController.text
                   };
 
