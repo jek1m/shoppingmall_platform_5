@@ -153,7 +153,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                   Spacer(),
                   // 구매 버튼
                   ElevatedButton(
-                    child: Text('구매하기'),
+                    child: Text('장바구니 담기'),
                     onPressed: _showConfirmDialog,
                   )
                 ],
