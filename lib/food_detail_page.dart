@@ -80,7 +80,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(widget.food['name']!)),
-        body: Column(
+        body: ListView(
           children: [
             Container(
                 width: double.infinity,
