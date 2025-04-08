@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ShoppingBag extends StatefulWidget {
-  List<Map<String, dynamic>?> foods;
+  List<Map<String, dynamic>> foods;
 
   ShoppingBag(this.foods);
 
@@ -52,7 +52,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('맛있으면 또 5조'),
+        title: Text('풋풋'),
       ),
       body: ColoredBox(
         color: Colors.white,
@@ -73,12 +73,13 @@ class _ShoppingBagState extends State<ShoppingBag> {
                     : ListView.builder(
                         itemCount: widget.foods.length,
                         itemBuilder: (context, idx) {
-                          return shoppingList(widget.foods[idx]!);
+                          return shoppingList(widget.foods[idx]);
                         }),
               )),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.only(top: 12, left: 24, right: 12),
+                padding: const EdgeInsets.only(
+                    top: 12, left: 24, right: 12, bottom: 12),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
@@ -194,178 +195,183 @@ class _ShoppingBagState extends State<ShoppingBag> {
     );
   }
 
-  Card shoppingList(Map<String, dynamic> food) {
+  Widget shoppingList(Map<String, dynamic> food) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       elevation: 3,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Padding(
+      child: Container(
+        height: 150,
         padding: const EdgeInsets.all(12.0),
-        child: SizedBox(
-          height: 150,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: AspectRatio(
-                  aspectRatio: 1 / 1,
-                  child: Image.asset(
-                    food['image'],
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                food['name'],
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (food['amount'] == '0') return;
-                                  onChange(food: food, type: 'subtract');
-                                },
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                        width: 1, color: Colors.black),
-                                  ),
-                                  child: Icon(Icons.exposure_minus_1),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 3,
-                              ),
-                              Container(
-                                width: 45,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  border:
-                                      Border.all(width: 1, color: Colors.black),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    food['amount'],
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 3,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  onChange(food: food, type: 'add');
-                                },
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                        width: 1, color: Colors.black),
-                                  ),
-                                  child: Icon(Icons.plus_one),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 150,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: AspectRatio(
+                        aspectRatio: 1 / 1,
+                        child: Image.asset(
+                          food['image'],
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showCupertinoDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CupertinoAlertDialog(
-                                    title: Text('삭제 하시겠습니까?'),
-                                    // content: Text(''),
-                                    actions: [
-                                      CupertinoDialogAction(
-                                        isDefaultAction: true,
-                                        onPressed: () {
-                                          // 이게 있어야 팝업 창이 사라짐
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          '취소',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
-                                      CupertinoDialogAction(
-                                        isDestructiveAction: true,
-                                        onPressed: () {
-                                          // 이게 있어야 팝업 창이 사라짐
-                                          Navigator.pop(context);
-                                          onRemove(food);
-                                        },
-                                        child: Text(
-                                          '확인',
-                                          style: TextStyle(color: Colors.blue),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: Icon(Icons.cancel),
-                          ),
-                          Spacer(),
-                          Text(
-                            '₩ ${NumberFormat('#,###').format(int.parse(food['price']))}', // 세 자리마다 콤마 추가
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            style: const TextStyle(
-                              letterSpacing: -1,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.deepOrange,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  food['name'],
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (food['amount'] == '0') return;
+                                    onChange(food: food, type: 'subtract');
+                                  },
+                                  child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(
+                                          width: 1, color: Colors.black),
+                                    ),
+                                    child: Icon(Icons.exposure_minus_1),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                Container(
+                                  width: 45,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                        width: 1, color: Colors.black),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      food['amount'],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    onChange(food: food, type: 'add');
+                                  },
+                                  child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(
+                                          width: 1, color: Colors.black),
+                                    ),
+                                    child: Icon(Icons.plus_one),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showCupertinoDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CupertinoAlertDialog(
+                                      title: Text('삭제 하시겠습니까?'),
+                                      // content: Text(''),
+                                      actions: [
+                                        CupertinoDialogAction(
+                                          isDefaultAction: true,
+                                          onPressed: () {
+                                            // 이게 있어야 팝업 창이 사라짐
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            '취소',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                        CupertinoDialogAction(
+                                          isDestructiveAction: true,
+                                          onPressed: () {
+                                            // 이게 있어야 팝업 창이 사라짐
+                                            Navigator.pop(context);
+                                            onRemove(food);
+                                          },
+                                          child: Text(
+                                            '확인',
+                                            style:
+                                                TextStyle(color: Colors.blue),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Icon(Icons.cancel),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              '₩ ${NumberFormat('#,###').format(int.parse(food['price']))}', // 세 자리마다 콤마 추가
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
+              style: const TextStyle(
+                letterSpacing: -1,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepOrange,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -29,20 +29,19 @@ class _FoodListPageState extends State<FoodListPage> {
   ];
 
   // 상세페이지, 장바구니 페이지를 위해 만든 변수
-  List<Map<String, dynamic>?> cartList = [];
+  List<Map<String, dynamic>> cartList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('맛있어서 또 5조'),
+        title: const Text('풋풋'),
         centerTitle: true,
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 12),
             child: GestureDetector(
                 onTap: () {
-                  print('장바구니');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return ShoppingBag(cartList);
                   }));

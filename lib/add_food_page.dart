@@ -35,7 +35,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('맛있어서 또 5조'),
+        title: const Text('풋풋'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
